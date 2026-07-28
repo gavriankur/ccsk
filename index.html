@@ -19,467 +19,713 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CCSK Exam Practice Quiz</title>
-	 <link rel="stylesheet" href="https://pages-themes.github.io/hacker/assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-color: #1b1b1b;
-            color: #b5e853;
-            font-family: 'Anonymous Pro', monospace;
+        :root {
+            --bg-primary: #0a0a1a;
+            --bg-secondary: #111128;
+            --bg-card: rgba(20, 20, 50, 0.6);
+            --bg-glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(100, 180, 255, 0.3);
+            --accent: #6c63ff;
+            --accent-light: #8b83ff;
+            --accent-glow: rgba(108, 99, 255, 0.15);
+            --success: #00e676;
+            --success-glow: rgba(0, 230, 118, 0.12);
+            --danger: #ff4757;
+            --danger-glow: rgba(255, 71, 87, 0.12);
+            --warning: #ffa502;
+            --text-primary: #f0f0f5;
+            --text-secondary: #8888aa;
+            --text-muted: #55557a;
+            --gradient-1: linear-gradient(135deg, #6c63ff, #3b82f6);
+            --gradient-2: linear-gradient(135deg, #6c63ff, #a855f7);
+            --gradient-3: linear-gradient(135deg, #0ea5e9, #6c63ff);
+            --shadow-card: 0 4px 30px rgba(0, 0, 0, 0.3);
+            --shadow-glow: 0 0 40px rgba(108, 99, 255, 0.08);
         }
-        a {
-            color: #63c0f5;
-        }
-        h1, h2, h3 {
-            color: #b5e853;
-        }
-    </style>
-    <style>
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0f0f1a;
-            color: #e0e0e0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* === ANIMATED BACKGROUND === */
+        .bg-effects {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .bg-orb:nth-child(1) {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(108,99,255,0.3), transparent);
+            top: -10%; left: -5%;
+            animation-delay: 0s;
+        }
+
+        .bg-orb:nth-child(2) {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(59,130,246,0.2), transparent);
+            top: 40%; right: -10%;
+            animation-delay: -7s;
+        }
+
+        .bg-orb:nth-child(3) {
+            width: 350px; height: 350px;
+            background: radial-gradient(circle, rgba(168,85,247,0.2), transparent);
+            bottom: -5%; left: 30%;
+            animation-delay: -14s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        .bg-grid {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image:
+                linear-gradient(rgba(108,99,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(108,99,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* === MAIN CONTAINER === */
+        .quiz-container {
+            position: relative;
+            z-index: 1;
+            max-width: 880px;
+            margin: 0 auto;
             padding: 20px;
         }
 
-        .quiz-container {
-            max-width: 850px;
-            margin: 0 auto;
-        }
-
+        /* === HEADER === */
         header {
             text-align: center;
-            padding: 30px 0;
+            padding: 50px 0 40px;
+        }
+
+        .logo-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 70px; height: 70px;
+            background: var(--gradient-2);
+            border-radius: 20px;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(108,99,255,0.3);
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 10px 40px rgba(108,99,255,0.3); }
+            50% { box-shadow: 0 10px 60px rgba(108,99,255,0.5); }
         }
 
         header h1 {
-            font-size: 2.2rem;
-            background: linear-gradient(135deg, #00b4d8, #90e0ef);
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #fff 0%, #c7c7ff 50%, #6c63ff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         header p {
-            color: #888;
+            color: var(--text-secondary);
             font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .header-badges {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 16px;
         }
 
         .badge {
-            display: inline-block;
-            background: rgba(0,180,216,0.15);
-            border: 1px solid rgba(0,180,216,0.3);
-            color: #90e0ef;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-glass);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
         }
 
-        /* Domain filter */
+        .badge .dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* === DOMAIN FILTER === */
         .domain-filter {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
             justify-content: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .domain-btn {
-            padding: 8px 16px;
-            border: 1px solid #2a2a4a;
-            background: #1a1a2e;
-            color: #aaa;
-            border-radius: 20px;
+            padding: 8px 18px;
+            border: 1px solid var(--border);
+            background: var(--bg-glass);
+            color: var(--text-muted);
+            border-radius: 100px;
             cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.2s;
-        }
-
-        .domain-btn:hover, .domain-btn.active {
-            border-color: #00b4d8;
-            color: #00b4d8;
-            background: rgba(0,180,216,0.1);
-        }
-
-        /* Score Bar */
-        .score-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #1a1a2e;
-            border: 1px solid #2a2a4a;
-            border-radius: 12px;
-            padding: 15px 25px;
-            margin-bottom: 25px;
-            position: sticky;
-            top: 10px;
-            z-index: 100;
+            font-size: 0.78rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
         }
 
-        .score-bar .score-item {
+        .domain-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent-light);
+            background: var(--accent-glow);
+            transform: translateY(-1px);
+        }
+
+        .domain-btn.active {
+            background: var(--gradient-1);
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(108,99,255,0.3);
+        }
+
+        /* === SCORE BAR === */
+        .score-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+        }
+
+        .score-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
             text-align: center;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
         }
 
-        .score-bar .score-item span {
+        .score-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        .score-card span {
             display: block;
-            font-size: 0.75rem;
-            color: #888;
+            font-size: 0.65rem;
+            color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            margin-bottom: 6px;
         }
 
-        .score-bar .score-item strong {
-            font-size: 1.4rem;
+        .score-card strong {
+            font-size: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
         }
 
-        .score-correct strong { color: #00e676; }
-        .score-wrong strong { color: #ff5252; }
-        .score-total strong { color: #00b4d8; }
-        .score-percent strong { color: #ffd740; }
+        .sc-correct strong { color: var(--success); }
+        .sc-wrong strong { color: var(--danger); }
+        .sc-progress strong { color: var(--accent-light); }
+        .sc-percent strong { color: var(--warning); }
 
-        /* Progress Bar */
+        /* === PROGRESS BAR === */
         .progress-container {
-            background: #1a1a2e;
-            border-radius: 10px;
-            height: 8px;
-            margin-bottom: 30px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 100px;
+            height: 6px;
+            margin-bottom: 35px;
             overflow: hidden;
+            border: 1px solid var(--border);
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #00b4d8, #90e0ef);
-            border-radius: 10px;
-            transition: width 0.5s ease;
+            background: var(--gradient-1);
+            border-radius: 100px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             width: 0%;
+            position: relative;
         }
 
-        /* Question Card */
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* === QUESTION CARD === */
         .question-card {
-            background: #1a1a2e;
-            border: 1px solid #2a2a4a;
-            border-radius: 16px;
-            padding: 30px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
             margin-bottom: 20px;
-            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-card);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .question-card:nth-child(1) { animation-delay: 0.05s; }
+        .question-card:nth-child(2) { animation-delay: 0.1s; }
+        .question-card:nth-child(3) { animation-delay: 0.15s; }
+        .question-card:nth-child(4) { animation-delay: 0.2s; }
+        .question-card:nth-child(5) { animation-delay: 0.25s; }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .question-card.answered-correct {
-            border-color: #00e676;
-            box-shadow: 0 0 20px rgba(0, 230, 118, 0.08);
+            border-color: rgba(0, 230, 118, 0.3);
+            box-shadow: 0 0 30px var(--success-glow);
         }
 
         .question-card.answered-wrong {
-            border-color: #ff5252;
-            box-shadow: 0 0 20px rgba(255, 82, 82, 0.08);
+            border-color: rgba(255, 71, 87, 0.3);
+            box-shadow: 0 0 30px var(--danger-glow);
         }
 
         .question-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
 
         .question-number {
-            font-size: 0.8rem;
-            color: #00b4d8;
+            font-size: 0.72rem;
+            color: var(--accent-light);
             text-transform: uppercase;
             letter-spacing: 2px;
+            font-weight: 700;
         }
 
         .domain-tag {
-            font-size: 0.7rem;
-            background: rgba(0,180,216,0.1);
-            border: 1px solid rgba(0,180,216,0.2);
-            color: #90e0ef;
-            padding: 3px 10px;
-            border-radius: 12px;
+            font-size: 0.68rem;
+            background: var(--accent-glow);
+            border: 1px solid rgba(108,99,255,0.2);
+            color: var(--accent-light);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-weight: 600;
         }
 
         .question-text {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            margin-bottom: 20px;
-            color: #fff;
+            font-size: 1.08rem;
+            line-height: 1.75;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+            font-weight: 500;
         }
 
-        /* Answer Options */
+        /* === ANSWER OPTIONS === */
         .options-list {
             list-style: none;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .option-item { position: relative; }
-
         .option-item input[type="radio"] { display: none; }
 
         .option-label {
             display: flex;
             align-items: flex-start;
-            padding: 14px 18px;
-            background: #12121f;
-            border: 2px solid #2a2a4a;
-            border-radius: 10px;
+            padding: 16px 20px;
+            background: rgba(255,255,255,0.02);
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.95rem;
-            line-height: 1.5;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.92rem;
+            line-height: 1.6;
+            font-weight: 450;
         }
 
         .option-label:hover {
-            border-color: #00b4d8;
-            background: #1e1e35;
+            border-color: var(--accent);
+            background: var(--accent-glow);
+            transform: translateX(4px);
         }
 
         .option-letter {
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: #2a2a4a;
-            color: #ccc;
+            min-width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
             font-weight: 700;
-            font-size: 0.85rem;
-            margin-right: 14px;
+            font-size: 0.82rem;
+            margin-right: 16px;
             flex-shrink: 0;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .option-item input[type="radio"]:checked + .option-label {
-            border-color: #00b4d8;
-            background: rgba(0, 180, 216, 0.08);
+            border-color: var(--accent);
+            background: var(--accent-glow);
         }
 
         .option-item input[type="radio"]:checked + .option-label .option-letter {
-            background: #00b4d8;
+            background: var(--gradient-1);
+            border-color: transparent;
             color: #fff;
+            box-shadow: 0 4px 15px rgba(108,99,255,0.3);
         }
 
         .option-item.disabled .option-label {
             cursor: not-allowed;
-            opacity: 0.5;
+            opacity: 0.4;
         }
-
         .option-item.disabled .option-label:hover {
-            border-color: #2a2a4a;
-            background: #12121f;
+            border-color: var(--border);
+            background: rgba(255,255,255,0.02);
+            transform: none;
         }
 
         .option-item.correct-answer .option-label {
-            border-color: #00e676 !important;
-            background: rgba(0, 230, 118, 0.1) !important;
+            border-color: var(--success) !important;
+            background: var(--success-glow) !important;
             opacity: 1 !important;
         }
-
         .option-item.correct-answer .option-label .option-letter {
-            background: #00e676 !important;
+            background: var(--success) !important;
+            border-color: transparent !important;
             color: #000 !important;
+            box-shadow: 0 4px 15px rgba(0,230,118,0.3) !important;
         }
 
         .option-item.wrong-answer .option-label {
-            border-color: #ff5252 !important;
-            background: rgba(255, 82, 82, 0.1) !important;
+            border-color: var(--danger) !important;
+            background: var(--danger-glow) !important;
             opacity: 1 !important;
         }
-
         .option-item.wrong-answer .option-label .option-letter {
-            background: #ff5252 !important;
+            background: var(--danger) !important;
+            border-color: transparent !important;
             color: #fff !important;
+            box-shadow: 0 4px 15px rgba(255,71,87,0.3) !important;
         }
 
-        /* Submit Button */
+        /* === SUBMIT BUTTON === */
         .submit-btn {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #00b4d8, #0096c7);
+            padding: 16px;
+            background: var(--gradient-1);
             border: none;
-            border-radius: 10px;
+            border-radius: 14px;
             color: #fff;
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
         }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::before { left: 100%; }
 
         .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 180, 216, 0.3);
+            box-shadow: 0 8px 30px rgba(108,99,255,0.4);
         }
 
+        .submit-btn:active { transform: translateY(0); }
+
         .submit-btn:disabled {
-            background: #2a2a4a;
+            background: rgba(255,255,255,0.05);
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+            color: var(--text-muted);
         }
 
-        /* Feedback */
+        /* === FEEDBACK === */
         .feedback {
             display: none;
-            padding: 15px 18px;
-            border-radius: 10px;
-            margin-top: 15px;
-            font-size: 0.92rem;
-            line-height: 1.6;
+            padding: 18px 20px;
+            border-radius: 14px;
+            margin-top: 16px;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            font-weight: 450;
+            animation: fadeInUp 0.4s ease;
         }
 
         .feedback.correct {
             display: block;
-            background: rgba(0, 230, 118, 0.08);
-            border: 1px solid rgba(0, 230, 118, 0.3);
+            background: var(--success-glow);
+            border: 1px solid rgba(0, 230, 118, 0.25);
             color: #69f0ae;
         }
 
         .feedback.wrong {
             display: block;
-            background: rgba(255, 82, 82, 0.08);
-            border: 1px solid rgba(255, 82, 82, 0.3);
+            background: var(--danger-glow);
+            border: 1px solid rgba(255, 71, 87, 0.25);
             color: #ff8a80;
         }
 
-        /* Results */
+        /* === RESULTS === */
         .results-card {
             display: none;
-            background: #1a1a2e;
-            border: 1px solid #2a2a4a;
-            border-radius: 16px;
-            padding: 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 50px 40px;
             text-align: center;
             margin-top: 10px;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-glow);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .results-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
         }
 
         .results-card h2 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 8px;
             color: #fff;
         }
 
         .results-card .final-score {
-            font-size: 3.5rem;
-            font-weight: 800;
+            font-size: 4rem;
+            font-weight: 900;
             margin: 20px 0;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: -2px;
         }
 
-        .final-score.excellent { color: #00e676; }
-        .final-score.good { color: #00b4d8; }
-        .final-score.average { color: #ffd740; }
-        .final-score.poor { color: #ff5252; }
+        .final-score.excellent { color: var(--success); text-shadow: 0 0 30px var(--success-glow); }
+        .final-score.good { color: var(--accent-light); text-shadow: 0 0 30px var(--accent-glow); }
+        .final-score.average { color: var(--warning); }
+        .final-score.poor { color: var(--danger); }
 
         .results-card .message {
-            color: #aaa;
-            font-size: 1.05rem;
-            margin-bottom: 15px;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
         }
 
         .domain-results {
             text-align: left;
-            margin: 20px 0;
+            margin: 25px 0;
         }
 
         .domain-results h3 {
-            color: #00b4d8;
-            font-size: 1rem;
-            margin-bottom: 12px;
+            color: var(--accent-light);
+            font-size: 0.85rem;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
         }
 
         .domain-result-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 15px;
-            background: #12121f;
-            border-radius: 8px;
-            margin-bottom: 6px;
-            font-size: 0.85rem;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            transition: all 0.2s;
         }
 
-        .domain-result-item .dr-bar {
+        .domain-result-item:hover {
+            border-color: var(--border-hover);
+            background: rgba(255,255,255,0.04);
+        }
+
+        .dr-bar {
             width: 100px;
             height: 6px;
-            background: #2a2a4a;
-            border-radius: 3px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 100px;
             overflow: hidden;
             margin-left: 10px;
         }
 
-        .domain-result-item .dr-bar-fill {
+        .dr-bar-fill {
             height: 100%;
-            border-radius: 3px;
-            transition: width 0.5s;
+            border-radius: 100px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .restart-btn {
-            padding: 14px 40px;
-            background: linear-gradient(135deg, #00b4d8, #0096c7);
+            padding: 16px 50px;
+            background: var(--gradient-1);
             border: none;
-            border-radius: 10px;
+            border-radius: 14px;
             color: #fff;
             font-size: 1rem;
-            font-weight: 600;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
         .restart-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 180, 216, 0.3);
+            box-shadow: 0 8px 30px rgba(108,99,255,0.4);
         }
 
         .shuffle-note {
-            color: #555;
-            font-size: 0.8rem;
-            margin-top: 8px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-top: 12px;
         }
 
+        /* === RESPONSIVE === */
         @media (max-width: 600px) {
-            header h1 { font-size: 1.5rem; }
-            .question-card { padding: 20px; }
-            .score-bar { padding: 10px 12px; flex-wrap: wrap; gap: 5px; }
-            .score-bar .score-item strong { font-size: 1.1rem; }
-            .domain-filter { gap: 5px; }
+            header h1 { font-size: 1.6rem; }
+            .question-card { padding: 22px 18px; border-radius: 16px; }
+            .score-bar { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .score-card { padding: 12px; border-radius: 12px; }
+            .score-card strong { font-size: 1.2rem; }
+            .domain-filter { gap: 6px; }
+            .domain-btn { padding: 6px 12px; font-size: 0.72rem; }
+            .results-card { padding: 30px 20px; }
+            .results-card .final-score { font-size: 3rem; }
+            .option-label { padding: 12px 14px; font-size: 0.88rem; }
+            .option-letter { min-width: 30px; height: 30px; font-size: 0.75rem; margin-right: 12px; }
         }
     </style>
 </head>
 <body>
 
+<!-- Animated Background -->
+<div class="bg-effects">
+    <div class="bg-orb"></div>
+    <div class="bg-orb"></div>
+    <div class="bg-orb"></div>
+    <div class="bg-grid"></div>
+</div>
+
 <div class="quiz-container">
+
     <header>
-        <h1>☁️ CCSK Exam Practice Quiz</h1>
+        <div class="logo-icon">☁️</div>
+        <h1>CCSK Exam Practice Quiz</h1>
         <p>Certificate of Cloud Security Knowledge — CSA Guidance v4, ENISA & CCM</p>
-        <span class="badge">50 Questions • All Domains</span>
+        <div class="header-badges">
+            <span class="badge"><span class="dot"></span> 50 Questions</span>
+            <span class="badge">All Domains</span>
+            <span class="badge">80% Pass Mark</span>
+        </div>
     </header>
 
     <div class="domain-filter" id="domainFilter"></div>
 
     <div class="score-bar" id="scoreBar">
-        <div class="score-item score-correct">
+        <div class="score-card sc-correct">
             <span>Correct</span>
             <strong id="correctCount">0</strong>
         </div>
-        <div class="score-item score-wrong">
+        <div class="score-card sc-wrong">
             <span>Wrong</span>
             <strong id="wrongCount">0</strong>
         </div>
-        <div class="score-item score-total">
+        <div class="score-card sc-progress">
             <span>Progress</span>
-            <strong id="progressCount">0 / 0</strong>
+            <strong id="progressCount">0/0</strong>
         </div>
-        <div class="score-item score-percent">
+        <div class="score-card sc-percent">
             <span>Score</span>
             <strong id="percentScore">—</strong>
         </div>
@@ -492,13 +738,15 @@
     <div id="quizArea"></div>
 
     <div class="results-card" id="resultsCard">
-        <h2>🏆 Quiz Complete!</h2>
+        <div class="results-icon">🏆</div>
+        <h2>Quiz Complete!</h2>
         <div class="final-score" id="finalScore"></div>
         <p class="message" id="resultsMessage"></p>
         <div class="domain-results" id="domainResults"></div>
-        <button class="restart-btn" onclick="restartQuiz()">🔄 Restart Quiz (Shuffled)</button>
-        <p class="shuffle-note">Questions and answers are reshuffled each time</p>
+        <button class="restart-btn" onclick="restartQuiz()">🔄 Restart Quiz</button>
+        <p class="shuffle-note">Questions & answers are reshuffled each time</p>
     </div>
+
 </div>
 
 <script>
@@ -521,7 +769,7 @@ const quizData = [
         question: "In the cloud service model hierarchy, which model gives the customer the MOST control over security?",
         options: ["SaaS", "PaaS", "FaaS", "IaaS"],
         answer: 3,
-        explanation: "IaaS (Infrastructure as a Service) gives customers the most control as they manage everything from the operating system up, including applications, data, runtime, and middleware.",
+        explanation: "IaaS gives customers the most control as they manage everything from the operating system up, including applications, data, runtime, and middleware.",
         domain: "Cloud Architecture"
     },
     {
@@ -545,14 +793,14 @@ const quizData = [
             "Running multiple operating systems on a single server"
         ],
         answer: 1,
-        explanation: "Multitenancy means multiple customers (tenants) share the same physical resources (compute, storage, network) but are logically separated through virtualization or other isolation mechanisms.",
+        explanation: "Multitenancy means multiple customers (tenants) share the same physical resources but are logically separated through virtualization or other isolation mechanisms.",
         domain: "Cloud Architecture"
     },
     {
         question: "According to CSA Guidance, what is the PRIMARY mechanism for managing cloud security when you lack direct control over infrastructure?",
         options: ["Physical security audits", "Contracts, audits, and third-party attestations", "Installing your own firewalls", "Disabling multitenancy"],
         answer: 1,
-        explanation: "When you don't directly control infrastructure (e.g., in SaaS/PaaS), you rely on contracts (SLAs), audits, assessments, and third-party attestations (like SOC 2, ISO 27001) to manage security.",
+        explanation: "When you don't directly control infrastructure, you rely on contracts (SLAs), audits, assessments, and third-party attestations to manage security.",
         domain: "Governance"
     },
     {
@@ -563,7 +811,7 @@ const quizData = [
         domain: "ENISA"
     },
     {
-        question: "What is the management plane (also called the control plane) in cloud computing?",
+        question: "What is the management plane (control plane) in cloud computing?",
         options: [
             "The physical layer of networking equipment",
             "The set of interfaces and APIs used to manage and configure cloud resources",
@@ -571,11 +819,11 @@ const quizData = [
             "The encryption management system"
         ],
         answer: 1,
-        explanation: "The management/control plane includes the web interfaces, APIs, and tools used to provision, manage, and configure cloud resources. Securing it is critical because compromise gives an attacker control over all cloud assets.",
+        explanation: "The management/control plane includes the web interfaces, APIs, and tools used to provision, manage, and configure cloud resources. Securing it is critical.",
         domain: "Management Plane"
     },
     {
-        question: "In the context of cloud incident response, what unique challenge does cloud computing introduce compared to traditional environments?",
+        question: "In the context of cloud incident response, what unique challenge does cloud computing introduce?",
         options: [
             "Incidents happen less frequently",
             "Limited or no access to underlying infrastructure and logs",
@@ -583,7 +831,7 @@ const quizData = [
             "There is no need for forensics in cloud"
         ],
         answer: 1,
-        explanation: "In cloud environments, customers may have limited access to infrastructure-level logs, network data, and physical hardware, making forensics and incident investigation more challenging.",
+        explanation: "In cloud environments, customers may have limited access to infrastructure-level logs, network data, and physical hardware, making forensics more challenging.",
         domain: "Incident Response"
     },
     {
@@ -602,7 +850,7 @@ const quizData = [
         question: "According to CSA Guidance, which type of encryption allows data to be processed while still encrypted?",
         options: ["Symmetric encryption", "Asymmetric encryption", "Homomorphic encryption", "Tokenization"],
         answer: 2,
-        explanation: "Homomorphic encryption allows computations to be performed on encrypted data without decrypting it first, though it is still largely experimental and computationally expensive.",
+        explanation: "Homomorphic encryption allows computations on encrypted data without decrypting it first, though it is still largely experimental.",
         domain: "Data Security"
     },
     {
@@ -614,7 +862,7 @@ const quizData = [
             "APIs only work with IaaS"
         ],
         answer: 1,
-        explanation: "APIs are the primary interface for cloud management. Broken authentication, weak access controls, or exposed API keys can lead to full compromise of cloud resources.",
+        explanation: "APIs are the primary interface for cloud management. Broken authentication, weak access controls, or exposed API keys can lead to full compromise.",
         domain: "Management Plane"
     },
     {
@@ -626,7 +874,7 @@ const quizData = [
             "The cloud security auditor"
         ],
         answer: 1,
-        explanation: "A data custodian is responsible for the safe custody, transport, and storage of data on behalf of the data owner. In cloud, the provider often acts as the data custodian.",
+        explanation: "A data custodian is responsible for the safe custody, transport, and storage of data on behalf of the data owner.",
         domain: "Information Governance"
     },
     {
@@ -638,7 +886,7 @@ const quizData = [
             "Slower application development"
         ],
         answer: 1,
-        explanation: "ENISA identifies Loss of Governance as a top risk — when using cloud services, the customer cedes control to the cloud provider on several issues that may affect security.",
+        explanation: "ENISA identifies Loss of Governance as a top risk — when using cloud services, the customer cedes control to the provider on issues affecting security.",
         domain: "ENISA"
     },
     {
@@ -650,7 +898,7 @@ const quizData = [
             "The end users"
         ],
         answer: 1,
-        explanation: "In SaaS, the cloud provider is responsible for securing the application, platform, and infrastructure. The customer is mainly responsible for user access management and data classification.",
+        explanation: "In SaaS, the cloud provider is responsible for securing the application, platform, and infrastructure. The customer mainly handles user access and data classification.",
         domain: "Cloud Architecture"
     },
     {
@@ -662,7 +910,7 @@ const quizData = [
             "Encrypted data stored in backup"
         ],
         answer: 1,
-        explanation: "Data remanence refers to residual data left on storage after deletion attempts. In cloud multi-tenant environments, this poses a risk if storage is reallocated to another tenant without proper sanitization.",
+        explanation: "Data remanence refers to residual data left on storage after deletion. In multi-tenant environments, this poses a risk if storage is reallocated without proper sanitization.",
         domain: "Data Security"
     },
     {
@@ -674,28 +922,28 @@ const quizData = [
             "To validate that encryption is being used"
         ],
         answer: 1,
-        explanation: "A SOC 2 Type II report evaluates the design and operating effectiveness of a service organization's controls relevant to security, availability, processing integrity, confidentiality, or privacy over a specified period.",
+        explanation: "A SOC 2 Type II report evaluates the design and operating effectiveness of controls relevant to security, availability, processing integrity, confidentiality, or privacy over a specified period.",
         domain: "Compliance"
     },
     {
         question: "According to CSA, what is the FIRST step in the cloud data security lifecycle?",
         options: ["Store", "Create", "Share", "Use"],
         answer: 1,
-        explanation: "The CSA cloud data security lifecycle consists of six phases: Create → Store → Use → Share → Archive → Destroy. 'Create' is the first phase where data is generated or modified.",
+        explanation: "The cloud data security lifecycle: Create → Store → Use → Share → Archive → Destroy. 'Create' is the first phase.",
         domain: "Data Security"
     },
     {
         question: "Which cloud security concept involves using multiple cloud providers to reduce dependency on a single vendor?",
         options: ["Cloud washing", "Multi-cloud strategy", "Cloud bursting", "Vertical scaling"],
         answer: 1,
-        explanation: "A multi-cloud strategy uses services from multiple cloud providers to avoid vendor lock-in, improve resilience, and leverage best-of-breed services.",
+        explanation: "A multi-cloud strategy uses services from multiple cloud providers to avoid vendor lock-in and improve resilience.",
         domain: "Cloud Architecture"
     },
     {
         question: "What type of hypervisor runs directly on the host hardware without a host OS?",
         options: ["Type 2 hypervisor", "Type 1 (bare-metal) hypervisor", "Container runtime", "Paravirtualized hypervisor"],
         answer: 1,
-        explanation: "A Type 1 (bare-metal) hypervisor runs directly on the physical hardware, providing better performance and security. Examples include VMware ESXi and Xen.",
+        explanation: "A Type 1 (bare-metal) hypervisor runs directly on physical hardware, providing better performance and security. Examples: VMware ESXi, Xen.",
         domain: "Virtualization"
     },
     {
@@ -719,7 +967,7 @@ const quizData = [
             "Cloud migration services"
         ],
         answer: 1,
-        explanation: "The CSA STAR (Security, Trust, Assurance, and Risk) program provides a publicly accessible registry where cloud providers can publish their security and compliance posture using the CCM.",
+        explanation: "The CSA STAR program provides a publicly accessible registry where cloud providers publish their security and compliance posture using the CCM.",
         domain: "Compliance"
     },
     {
@@ -743,7 +991,7 @@ const quizData = [
             "Rely solely on the cloud provider's default settings"
         ],
         answer: 1,
-        explanation: "Securing the management plane requires Multi-Factor Authentication (MFA), Role-Based Access Control (RBAC) with least privilege, and logging/monitoring of all administrative actions.",
+        explanation: "Securing the management plane requires MFA, Role-Based Access Control with least privilege, and logging/monitoring of all administrative actions.",
         domain: "Management Plane"
     },
     {
@@ -755,19 +1003,19 @@ const quizData = [
             "A locally installed antivirus program"
         ],
         answer: 1,
-        explanation: "Security as a Service (SECaaS) delivers security capabilities as a cloud service. Examples include cloud-based email filtering, web security, IAM, DDoS protection, and SIEM.",
+        explanation: "SECaaS delivers security capabilities as a cloud service. Examples include cloud-based email filtering, web security, IAM, DDoS protection, and SIEM.",
         domain: "Security as a Service"
     },
     {
         question: "What is the concept of 'immutable infrastructure' in cloud security?",
         options: [
             "Infrastructure that cannot be deleted",
-            "Servers that are replaced entirely rather than updated, reducing configuration drift and attack surface",
+            "Servers that are replaced entirely rather than updated, reducing configuration drift",
             "Infrastructure with permanent IP addresses",
             "Hardware that never needs maintenance"
         ],
         answer: 1,
-        explanation: "Immutable infrastructure means servers are never modified after deployment. Instead, new versions are deployed to replace old ones, reducing configuration drift, ensuring consistency, and limiting persistent threats.",
+        explanation: "Immutable infrastructure means servers are never modified after deployment. New versions replace old ones, reducing drift and limiting persistent threats.",
         domain: "Infrastructure Security"
     },
     {
@@ -779,7 +1027,7 @@ const quizData = [
             "Use only SaaS applications"
         ],
         answer: 1,
-        explanation: "Customer-managed encryption keys ensure the customer maintains control over data access, even from the cloud provider. This is the strongest data protection mechanism in cloud.",
+        explanation: "Customer-managed encryption keys ensure the customer maintains control over data access, even from the cloud provider.",
         domain: "Data Security"
     },
     {
@@ -791,14 +1039,14 @@ const quizData = [
             "Backing up a VM snapshot"
         ],
         answer: 1,
-        explanation: "VM escape is an exploit where an attacker in a guest VM breaks out to interact with the hypervisor or other guest VMs, potentially compromising the entire host.",
+        explanation: "VM escape is an exploit where an attacker in a guest VM breaks out to interact with the hypervisor or other guest VMs.",
         domain: "Virtualization"
     },
     {
         question: "Which principle states that a user should only have the minimum access rights necessary to perform their job?",
         options: ["Separation of duties", "Defense in depth", "Least privilege", "Need to know"],
         answer: 2,
-        explanation: "The Principle of Least Privilege dictates that users, systems, and processes should only have the minimum level of access necessary to accomplish their tasks.",
+        explanation: "The Principle of Least Privilege dictates that users, systems, and processes should only have the minimum level of access necessary.",
         domain: "IAM"
     },
     {
@@ -814,7 +1062,7 @@ const quizData = [
         domain: "Cloud Architecture"
     },
     {
-        question: "What role does the Consensus Assessments Initiative Questionnaire (CAIQ) play in cloud security?",
+        question: "What role does the CAIQ play in cloud security?",
         options: [
             "It provides automated security scanning",
             "It is a set of yes/no questions a cloud provider can answer to document their security controls",
@@ -822,7 +1070,7 @@ const quizData = [
             "It defines cloud pricing standards"
         ],
         answer: 1,
-        explanation: "The CAIQ provides a set of questions based on the CCM that cloud providers can answer to document which security controls they have in place, helping customers assess provider security.",
+        explanation: "The CAIQ provides questions based on the CCM that cloud providers can answer to document which security controls they have in place.",
         domain: "Compliance"
     },
     {
@@ -834,31 +1082,31 @@ const quizData = [
             "When backup systems fail to activate"
         ],
         answer: 1,
-        explanation: "Isolation failure occurs when the logical boundaries between cloud tenants break down, potentially allowing one tenant to access another's data, memory, or network resources.",
+        explanation: "Isolation failure occurs when logical boundaries between cloud tenants break down, potentially allowing one tenant to access another's resources.",
         domain: "ENISA"
     },
     {
         question: "What is the recommended approach for encryption key management in cloud?",
         options: [
-            "Store keys alongside the encrypted data for convenience",
+            "Store keys alongside the encrypted data",
             "Let the cloud provider manage all keys",
             "Separate key management from the cloud provider that holds the data, using a dedicated KMS",
             "Use the same key for all data"
         ],
         answer: 2,
-        explanation: "Best practice is to separate key management from data storage. Using a dedicated Key Management System (KMS), preferably customer-controlled, ensures the provider cannot access data unilaterally.",
+        explanation: "Best practice is to separate key management from data storage using a dedicated KMS, preferably customer-controlled.",
         domain: "Data Security"
     },
     {
         question: "What is Software Defined Networking (SDN) and its security benefit?",
         options: [
-            "Physical network switches controlled by software — makes networks faster",
+            "Physical switches controlled by software — makes networks faster",
             "Decoupling the network control plane from the data plane — enables granular, programmable security policies",
             "A type of VPN for cloud — encrypts all traffic",
             "A network monitoring tool — detects intrusions"
         ],
         answer: 1,
-        explanation: "SDN separates the control plane from the data plane, allowing network behavior to be programmatically defined. This enables granular micro-segmentation, dynamic security policies, and better isolation.",
+        explanation: "SDN separates the control plane from the data plane, enabling granular micro-segmentation, dynamic security policies, and better isolation.",
         domain: "Infrastructure Security"
     },
     {
@@ -870,23 +1118,23 @@ const quizData = [
             "Outsourcing security to the cloud provider"
         ],
         answer: 1,
-        explanation: "DevSecOps integrates security into every phase of the software development lifecycle (SDLC), from design through deployment and operations, rather than treating it as an afterthought.",
+        explanation: "DevSecOps integrates security into every phase of the SDLC, from design through deployment and operations.",
         domain: "Application Security"
     },
     {
         question: "What is tokenization as a data security technique?",
         options: [
             "Converting data into blockchain tokens",
-            "Replacing sensitive data with non-sensitive placeholders (tokens) that map back to the original data via a secure lookup",
+            "Replacing sensitive data with non-sensitive placeholders that map back to original data via a secure lookup",
             "Encrypting data with a one-time pad",
             "Compressing data for secure storage"
         ],
         answer: 1,
-        explanation: "Tokenization replaces sensitive data elements with non-sensitive equivalents (tokens). The original data is stored in a secure token vault. This reduces the scope of compliance requirements like PCI DSS.",
+        explanation: "Tokenization replaces sensitive data with non-sensitive tokens. The original data is stored in a secure token vault.",
         domain: "Data Security"
     },
     {
-        question: "In the context of cloud BCP/DR, what does a Recovery Time Objective (RTO) define?",
+        question: "In cloud BCP/DR, what does a Recovery Time Objective (RTO) define?",
         options: [
             "The amount of data loss that is acceptable",
             "The maximum acceptable time to restore a service after a disruption",
@@ -894,23 +1142,23 @@ const quizData = [
             "The frequency of backup operations"
         ],
         answer: 1,
-        explanation: "RTO defines the maximum tolerable time that a system can be down after a failure or disaster. RPO (Recovery Point Objective), by contrast, defines the acceptable amount of data loss measured in time.",
+        explanation: "RTO defines the maximum tolerable downtime after a failure. RPO defines acceptable data loss measured in time.",
         domain: "Business Continuity"
     },
     {
         question: "What is 'infrastructure as code' (IaC) and its security benefit?",
         options: [
             "Writing code that runs on bare metal servers",
-            "Managing and provisioning infrastructure through machine-readable definition files, enabling consistent and auditable deployments",
+            "Managing infrastructure through machine-readable definition files, enabling consistent and auditable deployments",
             "Converting legacy applications to cloud",
             "A programming language for network devices"
         ],
         answer: 1,
-        explanation: "IaC uses code to define and manage infrastructure. Security benefits include version control, consistency, automated compliance checks, repeatability, and elimination of manual configuration errors.",
+        explanation: "IaC uses code to define and manage infrastructure. Benefits include version control, consistency, automated compliance checks, and elimination of manual errors.",
         domain: "Infrastructure Security"
     },
     {
-        question: "According to CSA, what is the primary legal concern with cross-border data transfers in cloud computing?",
+        question: "What is the primary legal concern with cross-border data transfers in cloud computing?",
         options: [
             "Network latency increases",
             "Different jurisdictions may have conflicting data protection laws and requirements",
@@ -918,7 +1166,7 @@ const quizData = [
             "Data moves slower across borders"
         ],
         answer: 1,
-        explanation: "Cloud data may be stored or processed in different jurisdictions, each with their own data protection laws (e.g., GDPR, local privacy laws). Conflicting requirements create compliance challenges.",
+        explanation: "Cloud data may be stored in different jurisdictions with conflicting data protection laws (e.g., GDPR), creating compliance challenges.",
         domain: "Legal"
     },
     {
@@ -930,7 +1178,7 @@ const quizData = [
             "Breaking up large VMs into containers"
         ],
         answer: 1,
-        explanation: "Micro-segmentation creates granular security zones around individual workloads or applications using SDN and virtual firewalls, limiting lateral movement even within the same network.",
+        explanation: "Micro-segmentation creates granular security zones around individual workloads, limiting lateral movement within the network.",
         domain: "Infrastructure Security"
     },
     {
@@ -942,7 +1190,7 @@ const quizData = [
             "To encrypt all data at rest"
         ],
         answer: 1,
-        explanation: "Cloud DLP solutions monitor, detect, and block sensitive data from being shared, transmitted, or exposed inappropriately, whether at rest, in motion, or in use.",
+        explanation: "Cloud DLP solutions monitor, detect, and block sensitive data from being shared or exposed inappropriately.",
         domain: "Data Security"
     },
     {
@@ -954,7 +1202,7 @@ const quizData = [
             "Rapidly deleting cloud resources"
         ],
         answer: 1,
-        explanation: "Cloud bursting is a configuration where an application normally runs in a private cloud and 'bursts' into a public cloud when computing capacity demand spikes beyond the private cloud's capacity.",
+        explanation: "Cloud bursting is when an application normally runs in a private cloud and 'bursts' into a public cloud when demand spikes.",
         domain: "Cloud Architecture"
     },
     {
@@ -966,11 +1214,11 @@ const quizData = [
             "It stores the application data"
         ],
         answer: 1,
-        explanation: "The Identity Provider (IdP) authenticates the user and generates SAML assertions (tokens) that are sent to the Service Provider (SP), which then grants access based on the assertion.",
+        explanation: "The IdP authenticates the user and generates SAML assertions sent to the Service Provider, which grants access based on the assertion.",
         domain: "IAM"
     },
     {
-        question: "What is the PRIMARY security benefit of using containers compared to full virtual machines?",
+        question: "What is the PRIMARY security benefit of using containers compared to full VMs?",
         options: [
             "Containers are always more secure than VMs",
             "Containers have a smaller attack surface due to less overhead and can be deployed as immutable instances",
@@ -978,7 +1226,7 @@ const quizData = [
             "Containers provide stronger isolation than VMs"
         ],
         answer: 1,
-        explanation: "Containers have less overhead (no guest OS), resulting in a smaller attack surface. They support immutable deployments and rapid replacement. However, they share the host kernel, so VM isolation is actually stronger.",
+        explanation: "Containers have less overhead and a smaller attack surface. They support immutable deployments, but share the host kernel, so VM isolation is actually stronger.",
         domain: "Virtualization"
     },
     {
@@ -990,7 +1238,7 @@ const quizData = [
             "Compressing data to reduce visibility"
         ],
         answer: 1,
-        explanation: "Data masking (or obfuscation) replaces sensitive data with realistic but fictional data, typically used in development, testing, or analytics environments to protect real data.",
+        explanation: "Data masking replaces sensitive data with realistic but fictional data, typically used in development/testing environments.",
         domain: "Data Security"
     },
     {
@@ -1006,15 +1254,15 @@ const quizData = [
         domain: "Cloud Architecture"
     },
     {
-        question: "What is a 'cloud security alliance' recommended approach for conducting a risk assessment before cloud migration?",
+        question: "What is a CSA recommended approach for conducting a risk assessment before cloud migration?",
         options: [
             "Skip the assessment if using a major provider",
-            "Assess asset importance, threat landscape, vulnerabilities, and map to cloud-specific risks using frameworks like CCM",
+            "Assess asset importance, threat landscape, vulnerabilities, and map to cloud-specific risks using CCM",
             "Only assess cost savings",
             "Rely entirely on the provider's risk assessment"
         ],
         answer: 1,
-        explanation: "CSA recommends a thorough risk assessment including asset classification, threat modeling, vulnerability identification, and mapping to cloud-specific risks using the CCM and CAIQ frameworks.",
+        explanation: "CSA recommends thorough risk assessment including asset classification, threat modeling, vulnerability identification, and mapping to cloud-specific risks.",
         domain: "Governance"
     },
     {
@@ -1026,7 +1274,7 @@ const quizData = [
             "Content Delivery Networks"
         ],
         answer: 1,
-        explanation: "Micro-segmentation and security groups create isolated network segments, preventing attackers who compromise one workload from moving laterally to others within the same environment.",
+        explanation: "Micro-segmentation and security groups create isolated segments, preventing attackers from moving laterally within the environment.",
         domain: "Infrastructure Security"
     },
     {
@@ -1038,14 +1286,10 @@ const quizData = [
             "To provide physical security for data centers"
         ],
         answer: 1,
-        explanation: "CSPM tools continuously assess cloud infrastructure against security best practices and compliance frameworks, identifying misconfigurations, policy violations, and risks automatically.",
+        explanation: "CSPM tools continuously assess cloud infrastructure against security best practices, identifying misconfigurations and risks automatically.",
         domain: "Security as a Service"
     }
 ];
-
-    // ============================================================
-    //  Quiz Engine
-    // ============================================================
 
     let currentQuestions = [];
     let correctCount = 0;
@@ -1074,7 +1318,7 @@ const quizData = [
         const allBtn = document.createElement('button');
         allBtn.className = 'domain-btn active';
         allBtn.textContent = `All (${quizData.length})`;
-        allBtn.onclick = () => startQuiz('all');
+        allBtn.onclick = function() { startQuiz('all', this); };
         container.appendChild(allBtn);
 
         getDomains().forEach(domain => {
@@ -1082,28 +1326,23 @@ const quizData = [
             const btn = document.createElement('button');
             btn.className = 'domain-btn';
             btn.textContent = `${domain} (${count})`;
-            btn.onclick = () => startQuiz(domain);
+            btn.onclick = function() { startQuiz(domain, this); };
             container.appendChild(btn);
         });
     }
 
-    function startQuiz(domain) {
-        // Update active button
+    function startQuiz(domain, btnEl) {
         document.querySelectorAll('.domain-btn').forEach(b => b.classList.remove('active'));
-        event.target.classList.add('active');
+        if (btnEl) btnEl.classList.add('active');
 
         let questions = domain === 'all' ? [...quizData] : quizData.filter(q => q.domain === domain);
-        currentQuestions = shuffle(questions);
-
-        // Shuffle options for each question
-        currentQuestions = currentQuestions.map(q => {
+        currentQuestions = shuffle(questions).map(q => {
             const optionsWithIndex = q.options.map((opt, idx) => ({ text: opt, isCorrect: idx === q.answer }));
             const shuffled = shuffle(optionsWithIndex);
-            const newAnswer = shuffled.findIndex(o => o.isCorrect);
             return {
                 ...q,
                 options: shuffled.map(o => o.text),
-                answer: newAnswer
+                answer: shuffled.findIndex(o => o.isCorrect)
             };
         });
 
@@ -1124,12 +1363,13 @@ const quizData = [
     function buildQuiz() {
         const quizArea = document.getElementById('quizArea');
         const total = currentQuestions.length;
-        document.getElementById('progressCount').textContent = `0 / ${total}`;
+        document.getElementById('progressCount').textContent = `0/${total}`;
 
         currentQuestions.forEach((q, index) => {
             const card = document.createElement('div');
             card.className = 'question-card';
             card.id = `card-${index}`;
+            card.style.animationDelay = `${Math.min(index * 0.05, 0.5)}s`;
 
             let optionsHTML = '';
             q.options.forEach((opt, optIdx) => {
@@ -1140,8 +1380,7 @@ const quizData = [
                             <span class="option-letter">${letters[optIdx]}</span>
                             <span>${opt}</span>
                         </label>
-                    </li>
-                `;
+                    </li>`;
             });
 
             card.innerHTML = `
@@ -1152,8 +1391,7 @@ const quizData = [
                 <div class="question-text">${q.question}</div>
                 <ul class="options-list">${optionsHTML}</ul>
                 <button class="submit-btn" id="btn-${index}" onclick="submitAnswer(${index})">Submit Answer</button>
-                <div class="feedback" id="feedback-${index}"></div>
-            `;
+                <div class="feedback" id="feedback-${index}"></div>`;
 
             quizArea.appendChild(card);
         });
@@ -1164,7 +1402,13 @@ const quizData = [
         if (!selected) {
             const btn = document.getElementById(`btn-${qIndex}`);
             btn.textContent = '⚠ Select an answer first!';
-            setTimeout(() => { btn.textContent = 'Submit Answer'; }, 1500);
+            btn.style.background = 'rgba(255,165,2,0.2)';
+            btn.style.color = '#ffa502';
+            setTimeout(() => {
+                btn.textContent = 'Submit Answer';
+                btn.style.background = '';
+                btn.style.color = '';
+            }, 1500);
             return;
         }
 
@@ -1175,8 +1419,7 @@ const quizData = [
         const card = document.getElementById(`card-${qIndex}`);
         const btn = document.getElementById(`btn-${qIndex}`);
 
-        const allOptions = card.querySelectorAll('.option-item');
-        allOptions.forEach(opt => opt.classList.add('disabled'));
+        card.querySelectorAll('.option-item').forEach(opt => opt.classList.add('disabled'));
         card.querySelectorAll('input[type="radio"]').forEach(r => r.disabled = true);
 
         document.getElementById(`option-${qIndex}-${correctIndex}`).classList.add('correct-answer');
@@ -1211,7 +1454,7 @@ const quizData = [
     function updateScore() {
         document.getElementById('correctCount').textContent = correctCount;
         document.getElementById('wrongCount').textContent = wrongCount;
-        document.getElementById('progressCount').textContent = `${answeredCount} / ${currentQuestions.length}`;
+        document.getElementById('progressCount').textContent = `${answeredCount}/${currentQuestions.length}`;
 
         const pct = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
         document.getElementById('percentScore').textContent = answeredCount > 0 ? pct + '%' : '—';
@@ -1230,37 +1473,35 @@ const quizData = [
 
         if (percent >= 80) {
             scoreEl.className = 'final-score excellent';
-            messageEl.textContent = `Excellent! ${correctCount}/${currentQuestions.length} correct. You're well-prepared for the CCSK exam! The passing score is 80%.`;
+            messageEl.textContent = `Outstanding! ${correctCount}/${currentQuestions.length} correct. You're ready for the CCSK exam! (Pass mark: 80%)`;
         } else if (percent >= 70) {
             scoreEl.className = 'final-score good';
-            messageEl.textContent = `Good effort! ${correctCount}/${currentQuestions.length} correct. You're close to the 80% passing score — review the domains you missed.`;
+            messageEl.textContent = `Good effort! ${correctCount}/${currentQuestions.length} correct. Close to the 80% pass mark — review your weak domains.`;
         } else if (percent >= 50) {
             scoreEl.className = 'final-score average';
-            messageEl.textContent = `${correctCount}/${currentQuestions.length} correct. Review the CSA Guidance and ENISA materials, especially weaker domains below.`;
+            messageEl.textContent = `${correctCount}/${currentQuestions.length} correct. Review the CSA Guidance and ENISA materials for the domains below.`;
         } else {
             scoreEl.className = 'final-score poor';
-            messageEl.textContent = `${correctCount}/${currentQuestions.length} correct. Focus on studying the CSA Security Guidance v4 and CCM materials before retaking.`;
+            messageEl.textContent = `${correctCount}/${currentQuestions.length} correct. Spend more time studying the materials before retaking.`;
         }
 
-        // Domain breakdown
         const domainResultsDiv = document.getElementById('domainResults');
         domainResultsDiv.innerHTML = '<h3>📊 Performance by Domain</h3>';
 
         Object.keys(domainStats).sort().forEach(domain => {
             const stat = domainStats[domain];
             const dp = stat.total > 0 ? Math.round((stat.correct / stat.total) * 100) : 0;
-            let barColor = dp >= 80 ? '#00e676' : dp >= 60 ? '#ffd740' : '#ff5252';
+            let barColor = dp >= 80 ? 'var(--success)' : dp >= 60 ? 'var(--warning)' : 'var(--danger)';
 
             domainResultsDiv.innerHTML += `
                 <div class="domain-result-item">
                     <span>${domain}</span>
                     <span style="display:flex;align-items:center;gap:8px;">
-                        <span>${stat.correct}/${stat.total}</span>
+                        <span style="font-family:'JetBrains Mono',monospace;">${stat.correct}/${stat.total}</span>
                         <div class="dr-bar"><div class="dr-bar-fill" style="width:${dp}%;background:${barColor}"></div></div>
-                        <span style="color:${barColor};font-weight:700;min-width:40px;text-align:right;">${dp}%</span>
+                        <span style="color:${barColor};font-weight:700;min-width:40px;text-align:right;font-family:'JetBrains Mono',monospace;">${dp}%</span>
                     </span>
-                </div>
-            `;
+                </div>`;
         });
 
         card.style.display = 'block';
@@ -1268,23 +1509,22 @@ const quizData = [
     }
 
     function restartQuiz() {
-        const activeDomain = document.querySelector('.domain-btn.active');
-        if (activeDomain) activeDomain.click();
-        else startQuiz('all');
+        const activeBtn = document.querySelector('.domain-btn.active');
+        if (activeBtn) activeBtn.click();
+        else startQuiz('all', document.querySelector('.domain-btn'));
     }
 
     // Initialize
     buildDomainFilter();
-    // Auto-start with all questions
     currentQuestions = shuffle([...quizData]).map(q => {
         const optionsWithIndex = q.options.map((opt, idx) => ({ text: opt, isCorrect: idx === q.answer }));
         const shuffled = shuffle(optionsWithIndex);
-        const newAnswer = shuffled.findIndex(o => o.isCorrect);
-        return { ...q, options: shuffled.map(o => o.text), answer: newAnswer };
+        return { ...q, options: shuffled.map(o => o.text), answer: shuffled.findIndex(o => o.isCorrect) };
     });
     buildQuiz();
     updateScore();
 </script>
+
 </body>
 </html>
 
