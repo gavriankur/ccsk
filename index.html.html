@@ -1,0 +1,1282 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<style>
+								body {
+									background-color: white; /* Ensure the iframe has a white background */
+								}
+
+								
+							</style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCSK Exam Practice Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f0f1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #00b4d8, #90e0ef);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(0,180,216,0.15);
+            border: 1px solid rgba(0,180,216,0.3);
+            color: #90e0ef;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+        }
+
+        /* Domain filter */
+        .domain-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .domain-btn {
+            padding: 8px 16px;
+            border: 1px solid #2a2a4a;
+            background: #1a1a2e;
+            color: #aaa;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .domain-btn:hover, .domain-btn.active {
+            border-color: #00b4d8;
+            color: #00b4d8;
+            background: rgba(0,180,216,0.1);
+        }
+
+        /* Score Bar */
+        .score-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1a1a2e;
+            border: 1px solid #2a2a4a;
+            border-radius: 12px;
+            padding: 15px 25px;
+            margin-bottom: 25px;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .score-bar .score-item {
+            text-align: center;
+        }
+
+        .score-bar .score-item span {
+            display: block;
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .score-bar .score-item strong {
+            font-size: 1.4rem;
+        }
+
+        .score-correct strong { color: #00e676; }
+        .score-wrong strong { color: #ff5252; }
+        .score-total strong { color: #00b4d8; }
+        .score-percent strong { color: #ffd740; }
+
+        /* Progress Bar */
+        .progress-container {
+            background: #1a1a2e;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00b4d8, #90e0ef);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        /* Question Card */
+        .question-card {
+            background: #1a1a2e;
+            border: 1px solid #2a2a4a;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .question-card.answered-correct {
+            border-color: #00e676;
+            box-shadow: 0 0 20px rgba(0, 230, 118, 0.08);
+        }
+
+        .question-card.answered-wrong {
+            border-color: #ff5252;
+            box-shadow: 0 0 20px rgba(255, 82, 82, 0.08);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .question-number {
+            font-size: 0.8rem;
+            color: #00b4d8;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .domain-tag {
+            font-size: 0.7rem;
+            background: rgba(0,180,216,0.1);
+            border: 1px solid rgba(0,180,216,0.2);
+            color: #90e0ef;
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        /* Answer Options */
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .option-item { position: relative; }
+
+        .option-item input[type="radio"] { display: none; }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 14px 18px;
+            background: #12121f;
+            border: 2px solid #2a2a4a;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .option-label:hover {
+            border-color: #00b4d8;
+            background: #1e1e35;
+        }
+
+        .option-letter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #2a2a4a;
+            color: #ccc;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-right: 14px;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .option-item input[type="radio"]:checked + .option-label {
+            border-color: #00b4d8;
+            background: rgba(0, 180, 216, 0.08);
+        }
+
+        .option-item input[type="radio"]:checked + .option-label .option-letter {
+            background: #00b4d8;
+            color: #fff;
+        }
+
+        .option-item.disabled .option-label {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .option-item.disabled .option-label:hover {
+            border-color: #2a2a4a;
+            background: #12121f;
+        }
+
+        .option-item.correct-answer .option-label {
+            border-color: #00e676 !important;
+            background: rgba(0, 230, 118, 0.1) !important;
+            opacity: 1 !important;
+        }
+
+        .option-item.correct-answer .option-label .option-letter {
+            background: #00e676 !important;
+            color: #000 !important;
+        }
+
+        .option-item.wrong-answer .option-label {
+            border-color: #ff5252 !important;
+            background: rgba(255, 82, 82, 0.1) !important;
+            opacity: 1 !important;
+        }
+
+        .option-item.wrong-answer .option-label .option-letter {
+            background: #ff5252 !important;
+            color: #fff !important;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #00b4d8, #0096c7);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 180, 216, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: #2a2a4a;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Feedback */
+        .feedback {
+            display: none;
+            padding: 15px 18px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        .feedback.correct {
+            display: block;
+            background: rgba(0, 230, 118, 0.08);
+            border: 1px solid rgba(0, 230, 118, 0.3);
+            color: #69f0ae;
+        }
+
+        .feedback.wrong {
+            display: block;
+            background: rgba(255, 82, 82, 0.08);
+            border: 1px solid rgba(255, 82, 82, 0.3);
+            color: #ff8a80;
+        }
+
+        /* Results */
+        .results-card {
+            display: none;
+            background: #1a1a2e;
+            border: 1px solid #2a2a4a;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .results-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .results-card .final-score {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin: 20px 0;
+        }
+
+        .final-score.excellent { color: #00e676; }
+        .final-score.good { color: #00b4d8; }
+        .final-score.average { color: #ffd740; }
+        .final-score.poor { color: #ff5252; }
+
+        .results-card .message {
+            color: #aaa;
+            font-size: 1.05rem;
+            margin-bottom: 15px;
+        }
+
+        .domain-results {
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .domain-results h3 {
+            color: #00b4d8;
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        .domain-result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: #12121f;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+        }
+
+        .domain-result-item .dr-bar {
+            width: 100px;
+            height: 6px;
+            background: #2a2a4a;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-left: 10px;
+        }
+
+        .domain-result-item .dr-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s;
+        }
+
+        .restart-btn {
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #00b4d8, #0096c7);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 180, 216, 0.3);
+        }
+
+        .shuffle-note {
+            color: #555;
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.5rem; }
+            .question-card { padding: 20px; }
+            .score-bar { padding: 10px 12px; flex-wrap: wrap; gap: 5px; }
+            .score-bar .score-item strong { font-size: 1.1rem; }
+            .domain-filter { gap: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <header>
+        <h1>☁️ CCSK Exam Practice Quiz</h1>
+        <p>Certificate of Cloud Security Knowledge — CSA Guidance v4, ENISA & CCM</p>
+        <span class="badge">50 Questions • All Domains</span>
+    </header>
+
+    <div class="domain-filter" id="domainFilter"></div>
+
+    <div class="score-bar" id="scoreBar">
+        <div class="score-item score-correct">
+            <span>Correct</span>
+            <strong id="correctCount">0</strong>
+        </div>
+        <div class="score-item score-wrong">
+            <span>Wrong</span>
+            <strong id="wrongCount">0</strong>
+        </div>
+        <div class="score-item score-total">
+            <span>Progress</span>
+            <strong id="progressCount">0 / 0</strong>
+        </div>
+        <div class="score-item score-percent">
+            <span>Score</span>
+            <strong id="percentScore">—</strong>
+        </div>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <div id="quizArea"></div>
+
+    <div class="results-card" id="resultsCard">
+        <h2>🏆 Quiz Complete!</h2>
+        <div class="final-score" id="finalScore"></div>
+        <p class="message" id="resultsMessage"></p>
+        <div class="domain-results" id="domainResults"></div>
+        <button class="restart-btn" onclick="restartQuiz()">🔄 Restart Quiz (Shuffled)</button>
+        <p class="shuffle-note">Questions and answers are reshuffled each time</p>
+    </div>
+</div>
+
+<script>
+const quizData = [
+    {
+        question: "According to CSA Guidance, which cloud deployment model offers resources to the general public over the internet and is owned by a cloud provider?",
+        options: ["Private Cloud", "Community Cloud", "Public Cloud", "Hybrid Cloud"],
+        answer: 2,
+        explanation: "A Public Cloud is provisioned for open use by the general public. It exists on the premises of the cloud provider and resources are shared among multiple tenants.",
+        domain: "Cloud Architecture"
+    },
+    {
+        question: "What is the term for the concept that the cloud customer always retains responsibility for the security of their data regardless of the service model used?",
+        options: ["Shared Fate Model", "Residual Risk", "Shared Responsibility Model", "Due Diligence"],
+        answer: 2,
+        explanation: "The Shared Responsibility Model defines that security responsibility is shared between the cloud provider and customer. The customer always retains some level of responsibility, especially for their data.",
+        domain: "Governance"
+    },
+    {
+        question: "In the cloud service model hierarchy, which model gives the customer the MOST control over security?",
+        options: ["SaaS", "PaaS", "FaaS", "IaaS"],
+        answer: 3,
+        explanation: "IaaS (Infrastructure as a Service) gives customers the most control as they manage everything from the operating system up, including applications, data, runtime, and middleware.",
+        domain: "Cloud Architecture"
+    },
+    {
+        question: "What does the CSA Cloud Controls Matrix (CCM) provide?",
+        options: [
+            "A penetration testing methodology for cloud",
+            "A framework of cloud-specific security controls mapped to leading standards",
+            "A cloud pricing comparison tool",
+            "An incident response playbook for cloud breaches"
+        ],
+        answer: 1,
+        explanation: "The CCM is a cybersecurity control framework for cloud computing, providing a set of controls mapped to leading standards, regulations, and best practices.",
+        domain: "Compliance"
+    },
+    {
+        question: "Which of the following BEST describes 'multitenancy' in cloud computing?",
+        options: [
+            "Using multiple cloud providers simultaneously",
+            "Multiple customers sharing the same physical infrastructure while remaining logically isolated",
+            "Having multiple data centers for redundancy",
+            "Running multiple operating systems on a single server"
+        ],
+        answer: 1,
+        explanation: "Multitenancy means multiple customers (tenants) share the same physical resources (compute, storage, network) but are logically separated through virtualization or other isolation mechanisms.",
+        domain: "Cloud Architecture"
+    },
+    {
+        question: "According to CSA Guidance, what is the PRIMARY mechanism for managing cloud security when you lack direct control over infrastructure?",
+        options: ["Physical security audits", "Contracts, audits, and third-party attestations", "Installing your own firewalls", "Disabling multitenancy"],
+        answer: 1,
+        explanation: "When you don't directly control infrastructure (e.g., in SaaS/PaaS), you rely on contracts (SLAs), audits, assessments, and third-party attestations (like SOC 2, ISO 27001) to manage security.",
+        domain: "Governance"
+    },
+    {
+        question: "Which ENISA recommendation focuses on ensuring data can be moved from one cloud provider to another?",
+        options: ["Data Remanence", "Lock-In", "Portability and Interoperability", "Isolation Failure"],
+        answer: 2,
+        explanation: "Portability and Interoperability address the ability to move data and applications between cloud providers, reducing vendor lock-in risk.",
+        domain: "ENISA"
+    },
+    {
+        question: "What is the management plane (also called the control plane) in cloud computing?",
+        options: [
+            "The physical layer of networking equipment",
+            "The set of interfaces and APIs used to manage and configure cloud resources",
+            "The hypervisor layer",
+            "The encryption management system"
+        ],
+        answer: 1,
+        explanation: "The management/control plane includes the web interfaces, APIs, and tools used to provision, manage, and configure cloud resources. Securing it is critical because compromise gives an attacker control over all cloud assets.",
+        domain: "Management Plane"
+    },
+    {
+        question: "In the context of cloud incident response, what unique challenge does cloud computing introduce compared to traditional environments?",
+        options: [
+            "Incidents happen less frequently",
+            "Limited or no access to underlying infrastructure and logs",
+            "Cloud providers handle all incident response automatically",
+            "There is no need for forensics in cloud"
+        ],
+        answer: 1,
+        explanation: "In cloud environments, customers may have limited access to infrastructure-level logs, network data, and physical hardware, making forensics and incident investigation more challenging.",
+        domain: "Incident Response"
+    },
+    {
+        question: "What is the purpose of a CASB (Cloud Access Security Broker)?",
+        options: [
+            "To physically secure cloud data centers",
+            "To provide a control point between cloud users and cloud services for security policy enforcement",
+            "To replace traditional firewalls entirely",
+            "To manage cloud billing and cost optimization"
+        ],
+        answer: 1,
+        explanation: "A CASB sits between cloud users and cloud service providers to enforce security policies, provide visibility, ensure compliance, and protect against threats.",
+        domain: "Security as a Service"
+    },
+    {
+        question: "According to CSA Guidance, which type of encryption allows data to be processed while still encrypted?",
+        options: ["Symmetric encryption", "Asymmetric encryption", "Homomorphic encryption", "Tokenization"],
+        answer: 2,
+        explanation: "Homomorphic encryption allows computations to be performed on encrypted data without decrypting it first, though it is still largely experimental and computationally expensive.",
+        domain: "Data Security"
+    },
+    {
+        question: "What is the MOST critical security concern when using APIs to manage cloud services?",
+        options: [
+            "APIs are always slower than web consoles",
+            "Broken authentication and improper access controls on APIs",
+            "APIs cannot be encrypted",
+            "APIs only work with IaaS"
+        ],
+        answer: 1,
+        explanation: "APIs are the primary interface for cloud management. Broken authentication, weak access controls, or exposed API keys can lead to full compromise of cloud resources.",
+        domain: "Management Plane"
+    },
+    {
+        question: "What does the term 'data custodian' refer to in cloud security?",
+        options: [
+            "The end user who creates the data",
+            "The entity that processes or stores data on behalf of the data owner",
+            "The regulator who enforces data laws",
+            "The cloud security auditor"
+        ],
+        answer: 1,
+        explanation: "A data custodian is responsible for the safe custody, transport, and storage of data on behalf of the data owner. In cloud, the provider often acts as the data custodian.",
+        domain: "Information Governance"
+    },
+    {
+        question: "Which of the following is a key risk identified by ENISA related to cloud computing?",
+        options: [
+            "Reduced scalability",
+            "Loss of governance over cloud resources",
+            "Increased hardware costs",
+            "Slower application development"
+        ],
+        answer: 1,
+        explanation: "ENISA identifies Loss of Governance as a top risk — when using cloud services, the customer cedes control to the cloud provider on several issues that may affect security.",
+        domain: "ENISA"
+    },
+    {
+        question: "In a SaaS model, who is PRIMARILY responsible for application security?",
+        options: [
+            "The cloud customer",
+            "The cloud provider",
+            "A third-party auditor",
+            "The end users"
+        ],
+        answer: 1,
+        explanation: "In SaaS, the cloud provider is responsible for securing the application, platform, and infrastructure. The customer is mainly responsible for user access management and data classification.",
+        domain: "Cloud Architecture"
+    },
+    {
+        question: "What is 'data remanence' in cloud computing?",
+        options: [
+            "Data that remains available during an outage",
+            "Residual data that persists on storage media after deletion",
+            "Data that is replicated across regions",
+            "Encrypted data stored in backup"
+        ],
+        answer: 1,
+        explanation: "Data remanence refers to residual data left on storage after deletion attempts. In cloud multi-tenant environments, this poses a risk if storage is reallocated to another tenant without proper sanitization.",
+        domain: "Data Security"
+    },
+    {
+        question: "What is the primary purpose of a SOC 2 Type II report in cloud security?",
+        options: [
+            "To certify compliance with PCI DSS",
+            "To provide an auditor's opinion on the design AND operating effectiveness of controls over a period of time",
+            "To replace the need for penetration testing",
+            "To validate that encryption is being used"
+        ],
+        answer: 1,
+        explanation: "A SOC 2 Type II report evaluates the design and operating effectiveness of a service organization's controls relevant to security, availability, processing integrity, confidentiality, or privacy over a specified period.",
+        domain: "Compliance"
+    },
+    {
+        question: "According to CSA, what is the FIRST step in the cloud data security lifecycle?",
+        options: ["Store", "Create", "Share", "Use"],
+        answer: 1,
+        explanation: "The CSA cloud data security lifecycle consists of six phases: Create → Store → Use → Share → Archive → Destroy. 'Create' is the first phase where data is generated or modified.",
+        domain: "Data Security"
+    },
+    {
+        question: "Which cloud security concept involves using multiple cloud providers to reduce dependency on a single vendor?",
+        options: ["Cloud washing", "Multi-cloud strategy", "Cloud bursting", "Vertical scaling"],
+        answer: 1,
+        explanation: "A multi-cloud strategy uses services from multiple cloud providers to avoid vendor lock-in, improve resilience, and leverage best-of-breed services.",
+        domain: "Cloud Architecture"
+    },
+    {
+        question: "What type of hypervisor runs directly on the host hardware without a host OS?",
+        options: ["Type 2 hypervisor", "Type 1 (bare-metal) hypervisor", "Container runtime", "Paravirtualized hypervisor"],
+        answer: 1,
+        explanation: "A Type 1 (bare-metal) hypervisor runs directly on the physical hardware, providing better performance and security. Examples include VMware ESXi and Xen.",
+        domain: "Virtualization"
+    },
+    {
+        question: "What is 'VM sprawl' in cloud environments?",
+        options: [
+            "When a VM uses too much CPU",
+            "Uncontrolled proliferation of virtual machines leading to security and management challenges",
+            "When VMs are distributed across multiple regions",
+            "A type of VM-based attack"
+        ],
+        answer: 1,
+        explanation: "VM sprawl occurs when virtual machines proliferate without proper oversight, leading to unpatched, forgotten, or misconfigured VMs that increase the attack surface.",
+        domain: "Virtualization"
+    },
+    {
+        question: "What does the CSA STAR program provide?",
+        options: [
+            "Free cloud storage for startups",
+            "A publicly accessible registry of cloud provider security controls and assurance",
+            "Automated vulnerability scanning for clouds",
+            "Cloud migration services"
+        ],
+        answer: 1,
+        explanation: "The CSA STAR (Security, Trust, Assurance, and Risk) program provides a publicly accessible registry where cloud providers can publish their security and compliance posture using the CCM.",
+        domain: "Compliance"
+    },
+    {
+        question: "In Identity and Access Management (IAM) for cloud, what does 'federation' enable?",
+        options: [
+            "Combining all user accounts into one",
+            "Extending identity management across organizational boundaries using trust relationships",
+            "Removing the need for authentication",
+            "Encrypting all user credentials"
+        ],
+        answer: 1,
+        explanation: "Federation allows organizations to use their existing identity systems to authenticate users to cloud services via trust relationships and standards like SAML, OAuth, or OpenID Connect.",
+        domain: "IAM"
+    },
+    {
+        question: "What is the BEST practice for securing the management plane of a cloud environment?",
+        options: [
+            "Use single-factor authentication for speed",
+            "Implement MFA, strong RBAC, and comprehensive logging of all administrative actions",
+            "Give all developers admin access for agility",
+            "Rely solely on the cloud provider's default settings"
+        ],
+        answer: 1,
+        explanation: "Securing the management plane requires Multi-Factor Authentication (MFA), Role-Based Access Control (RBAC) with least privilege, and logging/monitoring of all administrative actions.",
+        domain: "Management Plane"
+    },
+    {
+        question: "Which of the following is an example of a 'Security as a Service' (SECaaS) offering?",
+        options: [
+            "A physical firewall appliance installed on-premises",
+            "Email security filtering delivered via the cloud",
+            "An on-premises SIEM deployment",
+            "A locally installed antivirus program"
+        ],
+        answer: 1,
+        explanation: "Security as a Service (SECaaS) delivers security capabilities as a cloud service. Examples include cloud-based email filtering, web security, IAM, DDoS protection, and SIEM.",
+        domain: "Security as a Service"
+    },
+    {
+        question: "What is the concept of 'immutable infrastructure' in cloud security?",
+        options: [
+            "Infrastructure that cannot be deleted",
+            "Servers that are replaced entirely rather than updated, reducing configuration drift and attack surface",
+            "Infrastructure with permanent IP addresses",
+            "Hardware that never needs maintenance"
+        ],
+        answer: 1,
+        explanation: "Immutable infrastructure means servers are never modified after deployment. Instead, new versions are deployed to replace old ones, reducing configuration drift, ensuring consistency, and limiting persistent threats.",
+        domain: "Infrastructure Security"
+    },
+    {
+        question: "According to CSA Guidance, what is the MOST effective way to ensure data security across different cloud services?",
+        options: [
+            "Rely on the provider's default encryption",
+            "Implement encryption with customer-managed keys",
+            "Store data only in private clouds",
+            "Use only SaaS applications"
+        ],
+        answer: 1,
+        explanation: "Customer-managed encryption keys ensure the customer maintains control over data access, even from the cloud provider. This is the strongest data protection mechanism in cloud.",
+        domain: "Data Security"
+    },
+    {
+        question: "What is 'VM escape' in virtualization security?",
+        options: [
+            "Migrating a VM to another host",
+            "A vulnerability where an attacker breaks out of a VM to access the hypervisor or other VMs",
+            "Shutting down a VM remotely",
+            "Backing up a VM snapshot"
+        ],
+        answer: 1,
+        explanation: "VM escape is an exploit where an attacker in a guest VM breaks out to interact with the hypervisor or other guest VMs, potentially compromising the entire host.",
+        domain: "Virtualization"
+    },
+    {
+        question: "Which principle states that a user should only have the minimum access rights necessary to perform their job?",
+        options: ["Separation of duties", "Defense in depth", "Least privilege", "Need to know"],
+        answer: 2,
+        explanation: "The Principle of Least Privilege dictates that users, systems, and processes should only have the minimum level of access necessary to accomplish their tasks.",
+        domain: "IAM"
+    },
+    {
+        question: "In cloud computing, what does 'elasticity' refer to?",
+        options: [
+            "The ability to stretch network cables",
+            "The ability to dynamically scale resources up or down based on demand",
+            "The flexibility of contract terms",
+            "The resilience of storage devices"
+        ],
+        answer: 1,
+        explanation: "Elasticity is a defining characteristic of cloud computing — the ability to automatically or rapidly provision and release resources to scale with demand.",
+        domain: "Cloud Architecture"
+    },
+    {
+        question: "What role does the Consensus Assessments Initiative Questionnaire (CAIQ) play in cloud security?",
+        options: [
+            "It provides automated security scanning",
+            "It is a set of yes/no questions a cloud provider can answer to document their security controls",
+            "It replaces the need for SOC audits",
+            "It defines cloud pricing standards"
+        ],
+        answer: 1,
+        explanation: "The CAIQ provides a set of questions based on the CCM that cloud providers can answer to document which security controls they have in place, helping customers assess provider security.",
+        domain: "Compliance"
+    },
+    {
+        question: "According to ENISA, what is 'isolation failure' in cloud computing?",
+        options: [
+            "When a data center loses power",
+            "When the mechanisms separating storage, memory, or network between tenants fail",
+            "When a VM is isolated from the network",
+            "When backup systems fail to activate"
+        ],
+        answer: 1,
+        explanation: "Isolation failure occurs when the logical boundaries between cloud tenants break down, potentially allowing one tenant to access another's data, memory, or network resources.",
+        domain: "ENISA"
+    },
+    {
+        question: "What is the recommended approach for encryption key management in cloud?",
+        options: [
+            "Store keys alongside the encrypted data for convenience",
+            "Let the cloud provider manage all keys",
+            "Separate key management from the cloud provider that holds the data, using a dedicated KMS",
+            "Use the same key for all data"
+        ],
+        answer: 2,
+        explanation: "Best practice is to separate key management from data storage. Using a dedicated Key Management System (KMS), preferably customer-controlled, ensures the provider cannot access data unilaterally.",
+        domain: "Data Security"
+    },
+    {
+        question: "What is Software Defined Networking (SDN) and its security benefit?",
+        options: [
+            "Physical network switches controlled by software — makes networks faster",
+            "Decoupling the network control plane from the data plane — enables granular, programmable security policies",
+            "A type of VPN for cloud — encrypts all traffic",
+            "A network monitoring tool — detects intrusions"
+        ],
+        answer: 1,
+        explanation: "SDN separates the control plane from the data plane, allowing network behavior to be programmatically defined. This enables granular micro-segmentation, dynamic security policies, and better isolation.",
+        domain: "Infrastructure Security"
+    },
+    {
+        question: "Which of the following BEST describes 'DevSecOps' in cloud environments?",
+        options: [
+            "A separate security team that reviews code after deployment",
+            "Integrating security practices and testing throughout the entire development and operations lifecycle",
+            "Using only open-source security tools",
+            "Outsourcing security to the cloud provider"
+        ],
+        answer: 1,
+        explanation: "DevSecOps integrates security into every phase of the software development lifecycle (SDLC), from design through deployment and operations, rather than treating it as an afterthought.",
+        domain: "Application Security"
+    },
+    {
+        question: "What is tokenization as a data security technique?",
+        options: [
+            "Converting data into blockchain tokens",
+            "Replacing sensitive data with non-sensitive placeholders (tokens) that map back to the original data via a secure lookup",
+            "Encrypting data with a one-time pad",
+            "Compressing data for secure storage"
+        ],
+        answer: 1,
+        explanation: "Tokenization replaces sensitive data elements with non-sensitive equivalents (tokens). The original data is stored in a secure token vault. This reduces the scope of compliance requirements like PCI DSS.",
+        domain: "Data Security"
+    },
+    {
+        question: "In the context of cloud BCP/DR, what does a Recovery Time Objective (RTO) define?",
+        options: [
+            "The amount of data loss that is acceptable",
+            "The maximum acceptable time to restore a service after a disruption",
+            "The time to complete a security audit",
+            "The frequency of backup operations"
+        ],
+        answer: 1,
+        explanation: "RTO defines the maximum tolerable time that a system can be down after a failure or disaster. RPO (Recovery Point Objective), by contrast, defines the acceptable amount of data loss measured in time.",
+        domain: "Business Continuity"
+    },
+    {
+        question: "What is 'infrastructure as code' (IaC) and its security benefit?",
+        options: [
+            "Writing code that runs on bare metal servers",
+            "Managing and provisioning infrastructure through machine-readable definition files, enabling consistent and auditable deployments",
+            "Converting legacy applications to cloud",
+            "A programming language for network devices"
+        ],
+        answer: 1,
+        explanation: "IaC uses code to define and manage infrastructure. Security benefits include version control, consistency, automated compliance checks, repeatability, and elimination of manual configuration errors.",
+        domain: "Infrastructure Security"
+    },
+    {
+        question: "According to CSA, what is the primary legal concern with cross-border data transfers in cloud computing?",
+        options: [
+            "Network latency increases",
+            "Different jurisdictions may have conflicting data protection laws and requirements",
+            "Cloud storage costs more in other countries",
+            "Data moves slower across borders"
+        ],
+        answer: 1,
+        explanation: "Cloud data may be stored or processed in different jurisdictions, each with their own data protection laws (e.g., GDPR, local privacy laws). Conflicting requirements create compliance challenges.",
+        domain: "Legal"
+    },
+    {
+        question: "What is micro-segmentation in cloud network security?",
+        options: [
+            "Splitting data into small encrypted chunks",
+            "Creating fine-grained security zones within cloud environments to isolate workloads individually",
+            "Dividing a cloud account into sub-accounts",
+            "Breaking up large VMs into containers"
+        ],
+        answer: 1,
+        explanation: "Micro-segmentation creates granular security zones around individual workloads or applications using SDN and virtual firewalls, limiting lateral movement even within the same network.",
+        domain: "Infrastructure Security"
+    },
+    {
+        question: "What is the purpose of a Data Loss Prevention (DLP) solution in cloud?",
+        options: [
+            "To prevent hardware failures",
+            "To detect and prevent unauthorized transmission or exposure of sensitive data",
+            "To back up data automatically",
+            "To encrypt all data at rest"
+        ],
+        answer: 1,
+        explanation: "Cloud DLP solutions monitor, detect, and block sensitive data from being shared, transmitted, or exposed inappropriately, whether at rest, in motion, or in use.",
+        domain: "Data Security"
+    },
+    {
+        question: "What is 'cloud bursting'?",
+        options: [
+            "When a cloud server crashes due to overload",
+            "A hybrid deployment where an application runs in a private cloud and bursts into a public cloud during demand spikes",
+            "A DDoS attack targeting cloud services",
+            "Rapidly deleting cloud resources"
+        ],
+        answer: 1,
+        explanation: "Cloud bursting is a configuration where an application normally runs in a private cloud and 'bursts' into a public cloud when computing capacity demand spikes beyond the private cloud's capacity.",
+        domain: "Cloud Architecture"
+    },
+    {
+        question: "In SAML-based federation, what role does the Identity Provider (IdP) play?",
+        options: [
+            "It hosts the application the user wants to access",
+            "It authenticates the user and issues security assertions to the Service Provider",
+            "It encrypts all network traffic",
+            "It stores the application data"
+        ],
+        answer: 1,
+        explanation: "The Identity Provider (IdP) authenticates the user and generates SAML assertions (tokens) that are sent to the Service Provider (SP), which then grants access based on the assertion.",
+        domain: "IAM"
+    },
+    {
+        question: "What is the PRIMARY security benefit of using containers compared to full virtual machines?",
+        options: [
+            "Containers are always more secure than VMs",
+            "Containers have a smaller attack surface due to less overhead and can be deployed as immutable instances",
+            "Containers don't need any security controls",
+            "Containers provide stronger isolation than VMs"
+        ],
+        answer: 1,
+        explanation: "Containers have less overhead (no guest OS), resulting in a smaller attack surface. They support immutable deployments and rapid replacement. However, they share the host kernel, so VM isolation is actually stronger.",
+        domain: "Virtualization"
+    },
+    {
+        question: "According to CSA Guidance, what is 'data masking'?",
+        options: [
+            "Hiding data behind a firewall",
+            "Replacing sensitive data with realistic but fake values for use in non-production environments",
+            "Encrypting data with AES-256",
+            "Compressing data to reduce visibility"
+        ],
+        answer: 1,
+        explanation: "Data masking (or obfuscation) replaces sensitive data with realistic but fictional data, typically used in development, testing, or analytics environments to protect real data.",
+        domain: "Data Security"
+    },
+    {
+        question: "What does the NIST definition of cloud computing identify as the five essential characteristics?",
+        options: [
+            "Scalability, Security, Speed, Savings, Simplicity",
+            "On-demand self-service, Broad network access, Resource pooling, Rapid elasticity, Measured service",
+            "IaaS, PaaS, SaaS, FaaS, DBaaS",
+            "Public, Private, Hybrid, Community, Multi-cloud"
+        ],
+        answer: 1,
+        explanation: "NIST defines five essential cloud characteristics: On-demand self-service, Broad network access, Resource pooling, Rapid elasticity, and Measured service.",
+        domain: "Cloud Architecture"
+    },
+    {
+        question: "What is a 'cloud security alliance' recommended approach for conducting a risk assessment before cloud migration?",
+        options: [
+            "Skip the assessment if using a major provider",
+            "Assess asset importance, threat landscape, vulnerabilities, and map to cloud-specific risks using frameworks like CCM",
+            "Only assess cost savings",
+            "Rely entirely on the provider's risk assessment"
+        ],
+        answer: 1,
+        explanation: "CSA recommends a thorough risk assessment including asset classification, threat modeling, vulnerability identification, and mapping to cloud-specific risks using the CCM and CAIQ frameworks.",
+        domain: "Governance"
+    },
+    {
+        question: "Which security control helps prevent unauthorized lateral movement within a cloud environment?",
+        options: [
+            "Load balancing",
+            "Network micro-segmentation and security groups",
+            "Auto-scaling",
+            "Content Delivery Networks"
+        ],
+        answer: 1,
+        explanation: "Micro-segmentation and security groups create isolated network segments, preventing attackers who compromise one workload from moving laterally to others within the same environment.",
+        domain: "Infrastructure Security"
+    },
+    {
+        question: "What is the purpose of a Cloud Security Posture Management (CSPM) tool?",
+        options: [
+            "To manage cloud billing",
+            "To continuously monitor cloud environments for misconfigurations, compliance violations, and security risks",
+            "To deploy cloud applications",
+            "To provide physical security for data centers"
+        ],
+        answer: 1,
+        explanation: "CSPM tools continuously assess cloud infrastructure against security best practices and compliance frameworks, identifying misconfigurations, policy violations, and risks automatically.",
+        domain: "Security as a Service"
+    }
+];
+
+    // ============================================================
+    //  Quiz Engine
+    // ============================================================
+
+    let currentQuestions = [];
+    let correctCount = 0;
+    let wrongCount = 0;
+    let answeredCount = 0;
+    let domainStats = {};
+    const letters = ['A', 'B', 'C', 'D'];
+
+    function shuffle(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function getDomains() {
+        return [...new Set(quizData.map(q => q.domain))];
+    }
+
+    function buildDomainFilter() {
+        const container = document.getElementById('domainFilter');
+        container.innerHTML = '';
+
+        const allBtn = document.createElement('button');
+        allBtn.className = 'domain-btn active';
+        allBtn.textContent = `All (${quizData.length})`;
+        allBtn.onclick = () => startQuiz('all');
+        container.appendChild(allBtn);
+
+        getDomains().forEach(domain => {
+            const count = quizData.filter(q => q.domain === domain).length;
+            const btn = document.createElement('button');
+            btn.className = 'domain-btn';
+            btn.textContent = `${domain} (${count})`;
+            btn.onclick = () => startQuiz(domain);
+            container.appendChild(btn);
+        });
+    }
+
+    function startQuiz(domain) {
+        // Update active button
+        document.querySelectorAll('.domain-btn').forEach(b => b.classList.remove('active'));
+        event.target.classList.add('active');
+
+        let questions = domain === 'all' ? [...quizData] : quizData.filter(q => q.domain === domain);
+        currentQuestions = shuffle(questions);
+
+        // Shuffle options for each question
+        currentQuestions = currentQuestions.map(q => {
+            const optionsWithIndex = q.options.map((opt, idx) => ({ text: opt, isCorrect: idx === q.answer }));
+            const shuffled = shuffle(optionsWithIndex);
+            const newAnswer = shuffled.findIndex(o => o.isCorrect);
+            return {
+                ...q,
+                options: shuffled.map(o => o.text),
+                answer: newAnswer
+            };
+        });
+
+        correctCount = 0;
+        wrongCount = 0;
+        answeredCount = 0;
+        domainStats = {};
+
+        document.getElementById('quizArea').innerHTML = '';
+        document.getElementById('resultsCard').style.display = 'none';
+        document.getElementById('progressBar').style.width = '0%';
+
+        buildQuiz();
+        updateScore();
+        document.getElementById('quizArea').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function buildQuiz() {
+        const quizArea = document.getElementById('quizArea');
+        const total = currentQuestions.length;
+        document.getElementById('progressCount').textContent = `0 / ${total}`;
+
+        currentQuestions.forEach((q, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `card-${index}`;
+
+            let optionsHTML = '';
+            q.options.forEach((opt, optIdx) => {
+                optionsHTML += `
+                    <li class="option-item" id="option-${index}-${optIdx}">
+                        <input type="radio" name="question${index}" id="q${index}o${optIdx}" value="${optIdx}">
+                        <label class="option-label" for="q${index}o${optIdx}">
+                            <span class="option-letter">${letters[optIdx]}</span>
+                            <span>${opt}</span>
+                        </label>
+                    </li>
+                `;
+            });
+
+            card.innerHTML = `
+                <div class="question-header">
+                    <div class="question-number">Question ${index + 1} of ${total}</div>
+                    <span class="domain-tag">${q.domain}</span>
+                </div>
+                <div class="question-text">${q.question}</div>
+                <ul class="options-list">${optionsHTML}</ul>
+                <button class="submit-btn" id="btn-${index}" onclick="submitAnswer(${index})">Submit Answer</button>
+                <div class="feedback" id="feedback-${index}"></div>
+            `;
+
+            quizArea.appendChild(card);
+        });
+    }
+
+    function submitAnswer(qIndex) {
+        const selected = document.querySelector(`input[name="question${qIndex}"]:checked`);
+        if (!selected) {
+            const btn = document.getElementById(`btn-${qIndex}`);
+            btn.textContent = '⚠ Select an answer first!';
+            setTimeout(() => { btn.textContent = 'Submit Answer'; }, 1500);
+            return;
+        }
+
+        const chosenIndex = parseInt(selected.value);
+        const q = currentQuestions[qIndex];
+        const correctIndex = q.answer;
+        const feedback = document.getElementById(`feedback-${qIndex}`);
+        const card = document.getElementById(`card-${qIndex}`);
+        const btn = document.getElementById(`btn-${qIndex}`);
+
+        const allOptions = card.querySelectorAll('.option-item');
+        allOptions.forEach(opt => opt.classList.add('disabled'));
+        card.querySelectorAll('input[type="radio"]').forEach(r => r.disabled = true);
+
+        document.getElementById(`option-${qIndex}-${correctIndex}`).classList.add('correct-answer');
+
+        if (!domainStats[q.domain]) domainStats[q.domain] = { correct: 0, total: 0 };
+        domainStats[q.domain].total++;
+
+        if (chosenIndex === correctIndex) {
+            correctCount++;
+            domainStats[q.domain].correct++;
+            card.classList.add('answered-correct');
+            feedback.className = 'feedback correct';
+            feedback.innerHTML = `<strong>✅ Correct!</strong> ${q.explanation}`;
+        } else {
+            wrongCount++;
+            document.getElementById(`option-${qIndex}-${chosenIndex}`).classList.add('wrong-answer');
+            card.classList.add('answered-wrong');
+            feedback.className = 'feedback wrong';
+            feedback.innerHTML = `<strong>❌ Incorrect.</strong> ${q.explanation}`;
+        }
+
+        answeredCount++;
+        btn.disabled = true;
+        btn.textContent = 'Answered ✓';
+        updateScore();
+
+        if (answeredCount === currentQuestions.length) {
+            setTimeout(showResults, 800);
+        }
+    }
+
+    function updateScore() {
+        document.getElementById('correctCount').textContent = correctCount;
+        document.getElementById('wrongCount').textContent = wrongCount;
+        document.getElementById('progressCount').textContent = `${answeredCount} / ${currentQuestions.length}`;
+
+        const pct = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+        document.getElementById('percentScore').textContent = answeredCount > 0 ? pct + '%' : '—';
+
+        const progressPercent = (answeredCount / currentQuestions.length) * 100;
+        document.getElementById('progressBar').style.width = progressPercent + '%';
+    }
+
+    function showResults() {
+        const card = document.getElementById('resultsCard');
+        const scoreEl = document.getElementById('finalScore');
+        const messageEl = document.getElementById('resultsMessage');
+        const percent = Math.round((correctCount / currentQuestions.length) * 100);
+
+        scoreEl.textContent = `${percent}%`;
+
+        if (percent >= 80) {
+            scoreEl.className = 'final-score excellent';
+            messageEl.textContent = `Excellent! ${correctCount}/${currentQuestions.length} correct. You're well-prepared for the CCSK exam! The passing score is 80%.`;
+        } else if (percent >= 70) {
+            scoreEl.className = 'final-score good';
+            messageEl.textContent = `Good effort! ${correctCount}/${currentQuestions.length} correct. You're close to the 80% passing score — review the domains you missed.`;
+        } else if (percent >= 50) {
+            scoreEl.className = 'final-score average';
+            messageEl.textContent = `${correctCount}/${currentQuestions.length} correct. Review the CSA Guidance and ENISA materials, especially weaker domains below.`;
+        } else {
+            scoreEl.className = 'final-score poor';
+            messageEl.textContent = `${correctCount}/${currentQuestions.length} correct. Focus on studying the CSA Security Guidance v4 and CCM materials before retaking.`;
+        }
+
+        // Domain breakdown
+        const domainResultsDiv = document.getElementById('domainResults');
+        domainResultsDiv.innerHTML = '<h3>📊 Performance by Domain</h3>';
+
+        Object.keys(domainStats).sort().forEach(domain => {
+            const stat = domainStats[domain];
+            const dp = stat.total > 0 ? Math.round((stat.correct / stat.total) * 100) : 0;
+            let barColor = dp >= 80 ? '#00e676' : dp >= 60 ? '#ffd740' : '#ff5252';
+
+            domainResultsDiv.innerHTML += `
+                <div class="domain-result-item">
+                    <span>${domain}</span>
+                    <span style="display:flex;align-items:center;gap:8px;">
+                        <span>${stat.correct}/${stat.total}</span>
+                        <div class="dr-bar"><div class="dr-bar-fill" style="width:${dp}%;background:${barColor}"></div></div>
+                        <span style="color:${barColor};font-weight:700;min-width:40px;text-align:right;">${dp}%</span>
+                    </span>
+                </div>
+            `;
+        });
+
+        card.style.display = 'block';
+        card.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function restartQuiz() {
+        const activeDomain = document.querySelector('.domain-btn.active');
+        if (activeDomain) activeDomain.click();
+        else startQuiz('all');
+    }
+
+    // Initialize
+    buildDomainFilter();
+    // Auto-start with all questions
+    currentQuestions = shuffle([...quizData]).map(q => {
+        const optionsWithIndex = q.options.map((opt, idx) => ({ text: opt, isCorrect: idx === q.answer }));
+        const shuffled = shuffle(optionsWithIndex);
+        const newAnswer = shuffled.findIndex(o => o.isCorrect);
+        return { ...q, options: shuffled.map(o => o.text), answer: newAnswer };
+    });
+    buildQuiz();
+    updateScore();
+</script>
+</body>
+</html>
+
+							<script>
+                            	
+							</script>
+                        </body>
+                        </html>
+                    
