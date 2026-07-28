@@ -1,6 +1,7 @@
 ---
 layout: default
-title: Home
 ---
 
-# Welcome to my site!
+# Hello World
+
+This is my site with the Hacker theme!
